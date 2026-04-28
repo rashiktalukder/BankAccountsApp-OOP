@@ -2,22 +2,55 @@ namespace BankAccountsApp
 {
     public partial class Form1 : Form
     {
+        List<BankAccount> BankAccounts = new List<BankAccount>();
+
         public Form1()
         {
             InitializeComponent();
+        }
 
-            BankAccount bankAccount = new BankAccount("Rashik");
+        private void CreateAccountBtn_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(OwnerTxt.Text))
+            {
+                return;
+            }
+            BankAccount bankAccount = new BankAccount(OwnerTxt.Text);
+            BankAccounts.Add(bankAccount);
+            RefreshGrid();
+            OwnerTxt.Text = string.Empty;
+        }
 
-            BankAccount bankAccount2 = new BankAccount("Elon");
-            
-            BankAccount bankAccount3 = new BankAccount("Bill");
-            
-            List<BankAccount> bankAccounts = new List<BankAccount>();
-            bankAccounts.Add(bankAccount);
-            bankAccounts.Add(bankAccount2);
-            bankAccounts.Add(bankAccount3);
+        private void RefreshGrid()
+        {
+            BankAccountsGrid.DataSource = null;
+            BankAccountsGrid.DataSource = BankAccounts;
+        }
 
-            BankAccountsGrid.DataSource = bankAccounts;
+        private void DepositeBtn_Click(object sender, EventArgs e)
+        {
+            if (BankAccountsGrid.SelectedRows.Count == 1)
+            {
+                BankAccount selectedBankAccount = BankAccountsGrid.SelectedRows[0].DataBoundItem as BankAccount;
+                string message = selectedBankAccount?.Deposit(AmountNum.Value);
+
+                RefreshGrid();
+                AmountNum.Value = 0;
+                MessageBox.Show(message);
+            }
+        }
+
+        private void WithdrawBtn_Click(object sender, EventArgs e)
+        {
+            if (BankAccountsGrid.SelectedRows.Count == 1)
+            {
+                BankAccount selectedBankAccount = BankAccountsGrid.SelectedRows[0].DataBoundItem as BankAccount;
+                string message = selectedBankAccount?.Withdraw(AmountNum.Value);
+
+                RefreshGrid();
+                AmountNum.Value = 0;
+                MessageBox.Show(message);
+            }
         }
     }
 }

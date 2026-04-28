@@ -8,13 +8,43 @@ namespace BankAccountsApp
     {
         public string Owner { get; set; }
         public Guid AccountNumber { get; set; }
-        public decimal Balance { get; set; }
+        public decimal Balance { get; private set; }
 
         public BankAccount(string owner)
         {
             Owner = owner;
             AccountNumber = Guid.NewGuid();
             Balance = 0;
+        }
+
+        public string Deposit(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                return "You Can not deposit $" + amount;
+            }
+            if (amount > 20000)
+            {
+                return "Deposit Limit Reached";
+            }
+
+            Balance += amount;
+            return "Deposit Completed Successfully";
+        }
+
+        public string Withdraw(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                return "You Can not Withdraw $" + amount;
+            }
+            if (amount > Balance)
+            {
+                return "You don't have enough money.";
+            }
+
+            Balance -= amount;
+            return "Withdraw Completed Successfully";
         }
     }
 }
