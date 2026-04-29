@@ -12,5 +12,21 @@ namespace BankAccountsApp
         {
             InterestRate = interestRate;
         }
+
+        public override string Deposit(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                return "You Can not deposit $" + amount;
+            }
+            if (amount > 20000)
+            {
+                return "Deposit Limit Reached";
+            }
+
+            decimal interestAmount = amount * (InterestRate / 100);
+            Balance += amount + interestAmount;
+            return "Deposit Completed Successfully";
+        }
     }
 }
